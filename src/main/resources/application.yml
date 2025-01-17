@@ -1,0 +1,30 @@
+#spring.application.name=springsecuritystarter
+spring:
+  profiles:
+    active: dev
+  application:
+    name: springsecuritystarter
+#  security:
+#    user:
+#      name: ${SECURITY_USERNAME:sagar}
+#      password: ${SECURITY_PASSWORD:sagar123}
+  datasource:
+    url: jdbc:mysql://localhost:3306/exampledb
+    username: exampleuser
+    password: examplepassword
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: validate # Controls schema generation, e.g., 'validate', 'update', 'create-drop'
+    show-sql: true      # Logs SQL queries for debugging
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+  sql:
+    init:
+      mode: always # Ensures schema.sql and data.sql are run if present
+logging:
+  level:
+    org.springframework.security: trace
+  pattern:
+    console: "%green(%d{yyyy-MM-dd HH:mm:ss}) | %highlight(%p)  | %yellow(%m) | %cyan(%c{1.}) %n"
+server:
+  port: 3000
