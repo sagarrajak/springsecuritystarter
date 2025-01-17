@@ -25,8 +25,13 @@ public class SecurityConfiguration {
     SecurityFilterChain defaultChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(cus -> {
-            cus.requestMatchers("/myAccount", "/myCards", "/myBalance", "/myLoans")
-                .authenticated();
+            cus.requestMatchers("/myAccount").hasAuthority("VIEWACCOUNT")
+                    .requestMatchers("/myCards").hasAuthority("VIEWCARDS")
+                    .requestMatchers("/myBalance").hasAuthority("VIEWLOANS")
+                    .requestMatchers("/myBalance").hasAuthority("VIEWBALANCE")
+                    .requestMatchers("/myAdminPage").hasRole("ADMIN")
+                    .requestMatchers("/myUserPage").hasRole("USER")
+                    .requestMatchers("/myDashboard").authenticated();
             cus.requestMatchers("/notices", "/contacts", "/error").permitAll();
         });
         http.formLogin(Customizer.withDefaults());

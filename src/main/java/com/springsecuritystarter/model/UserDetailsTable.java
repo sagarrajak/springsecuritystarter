@@ -1,14 +1,19 @@
 package com.springsecuritystarter.model;
 
 import jakarta.persistence.*;
+import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Entity()
 @Table(name = "user_table")
+@Data
 public class UserDetailsTable implements UserDetails  {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,6 +25,9 @@ public class UserDetailsTable implements UserDetails  {
     @Column(nullable = false)
     String pwd;
 
+    @OneToMany(mappedBy = "userDetailsTable", fetch = FetchType.EAGER)
+    Set<Authority> authorities;
+
     String role;
 
     public UserDetailsTable(String username, String pwd, String role) {
@@ -28,13 +36,14 @@ public class UserDetailsTable implements UserDetails  {
         this.role = role;
     }
 
-    public UserDetailsTable() {
-
-    }
+    public UserDetailsTable() {}
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of();
+        return this.authorities
+                .stream()
+                .map(authority -> new SimpleGrantedAuthority(authority.getName()))
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -45,13 +54,5 @@ public class UserDetailsTable implements UserDetails  {
     @Override
     public String getUsername() {
         return this.username;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Long getId() {
-        return id;
     }
 }
