@@ -1,5 +1,7 @@
 package com.springsecuritystarter.configuration;
 
+import com.springsecuritystarter.filters.AuthoritiesLoggingFilter;
+import com.springsecuritystarter.filters.RequestValidationBeforeFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.password.CompromisedPasswordChecker;
@@ -16,6 +18,7 @@ import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.password.HaveIBeenPwnedRestApiPasswordChecker;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
 import javax.sql.DataSource;
 
@@ -24,14 +27,17 @@ public class SecurityConfiguration {
     @Bean
     SecurityFilterChain defaultChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable)
+                .addFilterBefore(new RequestValidationBeforeFilter(), BasicAuthenticationFilter.class)
+                .addFilterAfter(new AuthoritiesLoggingFilter(), BasicAuthenticationFilter.class)
                 .authorizeHttpRequests(cus -> {
-            cus.requestMatchers("/myAccount").hasAuthority("VIEWACCOUNT")
-                    .requestMatchers("/myCards").hasAuthority("VIEWCARDS")
-                    .requestMatchers("/myBalance").hasAuthority("VIEWLOANS")
-                    .requestMatchers("/myBalance").hasAuthority("VIEWBALANCE")
-                    .requestMatchers("/myAdminPage").hasRole("ADMIN")
-                    .requestMatchers("/myUserPage").hasRole("USER")
-                    .requestMatchers("/myDashboard").authenticated();
+                    cus.requestMatchers("/myAccount").hasAuthority("VIEWACCOUNT")
+                        .requestMatchers("/myCards").hasAuthority("VIEWCARDS")
+                        .requestMatchers("/myBalance").hasAuthority("VIEWLOANS")
+                        .requestMatchers("/myBalance").hasAuthority("VIEWBALANCE")
+                        .requestMatchers("/myAdminPage").hasRole("ADMIN")
+                        .requestMatchers("/myUserPage").hasRole("USER")
+                        .requestMatchers("/myDashboard")
+                        .authenticated();
             cus.requestMatchers("/notices", "/contacts", "/error").permitAll();
         });
         http.formLogin(Customizer.withDefaults());
