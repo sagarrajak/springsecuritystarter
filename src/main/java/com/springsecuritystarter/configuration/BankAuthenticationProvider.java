@@ -8,16 +8,17 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 @Component
 @Profile("prod")
 public class BankAuthenticationProvider implements AuthenticationProvider {
-    private final UserService userService;
+    private final UserDetailsService userService;
     private final PasswordEncoder passwordEncoder;
 
-    public BankAuthenticationProvider(UserService userService, PasswordEncoder passwordEncoder) {
+    public BankAuthenticationProvider(UserDetailsService userService, PasswordEncoder passwordEncoder) {
         this.userService = userService;
         this.passwordEncoder = passwordEncoder;
     }

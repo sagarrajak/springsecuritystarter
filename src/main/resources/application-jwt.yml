@@ -1,13 +1,11 @@
 #spring.application.name=springsecuritystarter
 spring:
-  profiles:
-    active: dev
   application:
     name: springsecuritystarter
-#  security:
-#    user:
-#      name: ${SECURITY_USERNAME:sagar}
-#      password: ${SECURITY_PASSWORD:sagar123}
+  #  security:
+  #    user:
+  #      name: ${SECURITY_USERNAME:sagar}
+  #      password: ${SECURITY_PASSWORD:sagar123}
   datasource:
     url: jdbc:mysql://localhost:3306/exampledb
     username: exampleuser
@@ -28,3 +26,7 @@ logging:
     console: "%green(%d{yyyy-MM-dd HH:mm:ss}) | %highlight(%p)  | %yellow(%m) | %cyan(%c{1.}) %n"
 server:
   port: 3000
+
+jwt:
+  secret: ${JWT_SECRET:dsfjkdsfjksdfjksdfjkdfsjkjksdfdsfjkhhhhhhhhhhhhhhhhhhhhh894894398lksdfhljsbdfkjsbvadfkasdf98438942389894}
+  expiration: ${JWT_EXPIRATION:3600000}

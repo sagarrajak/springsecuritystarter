@@ -4,6 +4,7 @@ import com.springsecuritystarter.filters.AuthoritiesLoggingFilter;
 import com.springsecuritystarter.filters.RequestValidationBeforeFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.security.authentication.password.CompromisedPasswordChecker;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -23,6 +24,7 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 import javax.sql.DataSource;
 
 @Configuration
+@Profile("!jwt")
 public class SecurityConfiguration {
     @Bean
     SecurityFilterChain defaultChain(HttpSecurity http) throws Exception {
@@ -45,7 +47,11 @@ public class SecurityConfiguration {
         http.httpBasic(Customizer.withDefaults());
         return http.build();
     }
-//
+
+/**
+ * In memory user details service
+ */
+
 //    @Bean
 //    UserDetailsService getUserDetails() {
 //        UserDetails build = User.withUsername("sagar").password(getPasswordEncoder().encode("sagar123")).build();
@@ -53,6 +59,9 @@ public class SecurityConfiguration {
 //        return new InMemoryUserDetailsManager(build1, build);
 //    }
 
+    /**
+     * JDBC based user details service
+     */
 //    @Bean
 //    UserDetailsService userDetailsService(DataSource dataSource) {
 //        JdbcUserDetailsManager jdbcUserDetailsManager = new JdbcUserDetailsManager(dataSource);
